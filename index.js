@@ -10,6 +10,7 @@ require('dotenv').config();
 const handler = require('./src/event/message');
 const { loadCommands } = require('./src/libs/commandsController.js');
 const Reminders = require("./src/commands/_reminder");
+const path = require('path');
 // const supabase = require('./src/libs/supabaseClient.js');
 // Start Bot
 const logger = pino({
@@ -32,9 +33,10 @@ const deleteSession = async () => {
   }
 }
 
-const connectToWhatsApp = async (io) => {
+const connectToWhatsApp = async (app) => {
   const { state, saveCreds } = await useMultiFileAuthState('auth_info_baileys')
   global.conn = makeWASocket({
+    qrTimeout: 40000,
     auth: state,
     printQRInTerminal: true
   });
@@ -42,10 +44,17 @@ const connectToWhatsApp = async (io) => {
   conn.ev.on('connection.update', async (update) => {
     if (update.qr) {
       const base64QR = await QRCode.toDataURL(update.qr);
-      io.emit("data", { qr: base64QR });
+      app.get('/bot/qr', (req, res) => {
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+
+        setInterval(() => {
+          res.write(`data: ${JSON.stringify({ qr: base64QR })}\n\n`);
+        }, 10000); // Send data every second
+      });
     }
     const { connection, lastDisconnect } = update;
-    io.emit("data", { status: connection });
     if (connection === 'close') {
       const shouldReconnect = (lastDisconnect.error instanceof Boom)
         ? lastDisconnect.error.output.statusCode !== DisconnectReason.loggedOut

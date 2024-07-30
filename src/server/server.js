@@ -1,4 +1,3 @@
-const { Server } = require('socket.io');
 const http = require('http');
 const path = require('path');
 const express = require('express');
@@ -11,62 +10,40 @@ const startServer = async (connectToWhatsApp) => {
   // Server
   app.use(express.json());
   app.use(cors({
-    origin: 'https://syncro-bot-web.vercel.app',
+    origin: 'http://localhost:3000',
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type'],
     credentials: true
   }));
-  app.all('/', function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    next();
-  });
-  app.use('/socket.io', express.static(path.join(__dirname, 'node_modules', 'socket.io', 'client-dist')));
+  // app.all('/', function (req, res, next) {
+  //   res.header("Access-Control-Allow-Origin", "*");
+  //   res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  //   next();
+  // });
 
-  const io = new Server(server, {
-    cors: {
-      origin: 'https://syncro-bot-web.vercel.app',
-      methods: ['GET', 'POST'],
-      credentials: true
-    },
-    transports: ['polling']
-  });
-  io.on('connection', (socket) => {
-    console.log('A user connected:', socket.id);
-
-    socket.on('disconnect', () => {
-      console.log('User disconnected:', socket.id);
-    });
-
-    socket.on('error', (error) => {
-      console.error('Socket error:', error);
-    });
-  });
-
-  app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/views/index.html');
-  });
   app.post('/bot/start', (req, res) => {
     if (global.conn) return res.status(500).json({ status: false });
-    connectToWhatsApp(io);
+    connectToWhatsApp(app);
     return res.json({
       status: true
-    })
+    });
   });
+
   app.post('/bot/status', (req, res) => {
     if (global.conn) return res.json({ isConnected: true });
     else return res.json({ isConnected: false });
   });
+
   app.post('/bot/group/join', async (req, res) => {
     try {
       const code = req.body.inviteCode;
       const join = await conn.groupAcceptInvite(code);
-      console.log(join);
-      return res.json(join)
+      return res.json(join);
     } catch (e) {
-
+      return res.status(500).json({ status: false, msg: 'Failed to join group' });
     }
-  })
+  });
+
   app.post('/bot/group/check', async (req, res) => {
     try {
       const code = req.body.inviteCode;
@@ -79,25 +56,18 @@ const startServer = async (connectToWhatsApp) => {
         group_creation: date.toLocaleString()
       });
     } catch (e) {
-      return res.status(500).json({ status: false, msg: 'group not found' });
+      return res.status(500).json({ status: false, msg: 'Group not found' });
     }
-  })
-  // io.on("connection", (socket) => {
-  //   console.log("connected");
-  //   socket.on("disconnect", () => {
-  //     console.log("Disconnect");
-  //   })
-  // });
+  });
+
   try {
-    server.listen(3000, () => {
+    server.listen(3001, () => {
       console.log("Server started on port 3000");
     });
   } catch (e) {
-    console.log("Server started on port 3000");
+    console.log("Error starting server:", e);
   }
-  // connectToWhatsApp(io);
-
+  connectToWhatsApp(app)
 };
-
 
 module.exports = startServer;
