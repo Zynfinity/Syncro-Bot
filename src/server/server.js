@@ -16,6 +16,11 @@ const startServer = async (connectToWhatsApp) => {
     allowedHeaders: ['Content-Type'],
     credentials: true
   }));
+  app.all('/', function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    next();
+  });
   app.use('/socket.io', express.static(path.join(__dirname, 'node_modules', 'socket.io', 'client-dist')));
 
   const io = new Server(server, {
