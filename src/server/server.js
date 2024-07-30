@@ -11,15 +11,15 @@ const startServer = async (connectToWhatsApp) => {
   // Server
   app.use(express.json());
   app.use(cors({
-    origin: 'https://syncro-bot-web.vercel.app',
-    methods: ['GET', 'POST'],
+    origin: 'http://localhost:3000',
+    // methods: ['GET', 'POST'],
     credentials: true
   }));
   app.use('/socket.io', express.static(path.join(__dirname, 'node_modules', 'socket.io', 'client-dist')));
 
   const io = new Server(server, {
     cors: {
-      origin: 'https://syncro-bot-web.vercel.app',
+      origin: 'http://localhost:3000',
       methods: ['GET', 'POST'],
       credentials: true
     }
@@ -82,7 +82,7 @@ const startServer = async (connectToWhatsApp) => {
   //   })
   // });
   try {
-    server.listen(3001, () => {
+    server.listen(3000, () => {
       console.log("Server started on port 3000");
     });
   } catch (e) {
