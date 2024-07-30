@@ -4,7 +4,7 @@ const express = require('express');
 const cors = require('cors');
 
 const app = express();
-const server = http.createServer(app);
+// const server = http.createServer(app);
 
 const startServer = async (connectToWhatsApp) => {
   // Server
@@ -61,7 +61,7 @@ const startServer = async (connectToWhatsApp) => {
   });
 
   try {
-    server.listen(3001, () => {
+    app.listen(3001, () => {
       console.log("Server started on port 3000");
     });
   } catch (e) {
