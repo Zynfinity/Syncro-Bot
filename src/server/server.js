@@ -16,8 +16,10 @@ const startServer = async (connectToWhatsApp) => {
   });
   // Server
   app.use(express.json());
+  app.use(cors({
+    origin: '*', // or '*' to allow all origins
+  }));
   app.use('/socket.io', express.static(path.join(__dirname, 'node_modules', 'socket.io', 'client-dist')));
-  app.use(cors());
 
   app.get('/', (req, res) => {
     res.sendFile(__dirname + '/views/index.html');
