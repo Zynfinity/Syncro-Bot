@@ -24,6 +24,17 @@ const startServer = async (connectToWhatsApp) => {
       credentials: true
     }
   });
+  io.on('connection', (socket) => {
+    console.log('A user connected:', socket.id);
+
+    socket.on('disconnect', () => {
+      console.log('User disconnected:', socket.id);
+    });
+
+    socket.on('error', (error) => {
+      console.error('Socket error:', error);
+    });
+  });
 
   app.get('/', (req, res) => {
     res.sendFile(__dirname + '/views/index.html');
