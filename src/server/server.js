@@ -22,7 +22,8 @@ const startServer = async (connectToWhatsApp) => {
       origin: 'https://syncro-bot-web.vercel.app',
       methods: ['GET', 'POST'],
       credentials: true
-    }
+    },
+    transports: ['websocket', 'polling']
   });
   io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
