@@ -11,14 +11,17 @@ const startServer = async (connectToWhatsApp) => {
   // Server
   app.use(express.json());
   app.use(cors({
-    origin: '*', // or '*' to allow all origins
+    origin: 'https://syncro-bot-web.vercel.app',
+    methods: ['GET', 'POST'],
+    credentials: true
   }));
   app.use('/socket.io', express.static(path.join(__dirname, 'node_modules', 'socket.io', 'client-dist')));
 
   const io = new Server(server, {
     cors: {
-      origin: "https://syncro-bot-web.vercel.app",
-      methods: ["GET", "POST"]
+      origin: 'https://syncro-bot-web.vercel.app',
+      methods: ['GET', 'POST'],
+      credentials: true
     }
   });
 
