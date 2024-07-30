@@ -29,7 +29,7 @@ const startServer = async (connectToWhatsApp) => {
       methods: ['GET', 'POST'],
       credentials: true
     },
-    transports: ['websocket', 'polling']
+    transports: ['websocket']
   });
   io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
