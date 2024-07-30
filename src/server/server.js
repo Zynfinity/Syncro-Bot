@@ -10,7 +10,7 @@ const server = http.createServer(app);
 const startServer = async (connectToWhatsApp) => {
   const io = new Server(server, {
     cors: {
-      origin: "http://localhost:3000",
+      origin: "https://syncro-bot-web.vercel.app",
       methods: ["GET", "POST"]
     }
   });
