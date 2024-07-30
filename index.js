@@ -9,6 +9,7 @@ const startServer = require('./src/server/server.js');
 require('dotenv').config();
 const handler = require('./src/event/message');
 const { loadCommands } = require('./src/libs/commandsController.js');
+const Reminders = require("./src/commands/_reminder");
 // const supabase = require('./src/libs/supabaseClient.js');
 // Start Bot
 const logger = pino({
@@ -62,7 +63,7 @@ const connectToWhatsApp = async (io) => {
     } else if (connection === 'open') {
       console.log('opened connection');
       loadCommands();
-
+      Reminders(conn);
     }
   });
 

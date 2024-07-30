@@ -3,7 +3,7 @@ const supabase = require('../libs/supabaseClient');
 const { formatDate } = require('../libs/util');
 const moment = require('moment');
 
-const Reminders = async () => {
+const Reminders = async (conn) => {
   const today = new Date();
   const tomorrow = new Date(today);
   tomorrow.setDate(today.getDate() + 1);
@@ -87,6 +87,7 @@ const job = () => {
   schedule.scheduleJob('* * 6 * * *', () => {
     Reminders();
   });
+  return
 }
 
 module.exports = job;

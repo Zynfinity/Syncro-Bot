@@ -1,8 +1,8 @@
-const Reminders = require("../commands/_reminder");
+
 const { owner } = require("../config/config");
 const { executeCommand } = require("../libs/commandsController");
 const _function = require("./function");
-Reminders();
+
 
 
 /**
@@ -12,6 +12,7 @@ Reminders();
  * @param {Array} options.messages - Array yang berisi pesan-pesan yang diterima.
  */
 const handler = async ({ messages }) => {
+  console.log(messages)
   // Destrukturisasi properti penting dari pesan pertama dalam array messages
   const { key: { remoteJid: from, fromMe }, message } = messages[0];
   const m = messages[0];

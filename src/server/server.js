@@ -88,6 +88,8 @@ const startServer = async (connectToWhatsApp) => {
   } catch (e) {
     console.log("Server started on port 3000");
   }
+  // connectToWhatsApp(io);
+
 };
 
 
