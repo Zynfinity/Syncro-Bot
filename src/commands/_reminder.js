@@ -82,10 +82,9 @@ const Reminders = async (conn) => {
   }
 };
 
-const job = () => {
-  console.log('Ready');
+const job = (conn) => {
   schedule.scheduleJob('* * 6 * * *', () => {
-    Reminders();
+    Reminders(conn);
   });
   return
 }

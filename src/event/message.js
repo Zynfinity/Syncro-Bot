@@ -12,7 +12,7 @@ const _function = require("./function");
  * @param {Array} options.messages - Array yang berisi pesan-pesan yang diterima.
  */
 const handler = async ({ messages }) => {
-  console.log(messages)
+  global.config = require('../config/config.json');
   // Destrukturisasi properti penting dari pesan pertama dalam array messages
   const { key: { remoteJid: from, fromMe }, message } = messages[0];
   const m = messages[0];
@@ -21,7 +21,7 @@ const handler = async ({ messages }) => {
   _function(conn, m);
 
   // Jika pesan dikirim oleh bot sendiri, hentikan eksekusi
-  if (fromMe && !owner.includes(from)) return;
+  if (fromMe && (config.public ? true : !owner.includes(from))) return;
 
   // Menentukan isi pesan
   const body = message ? (message.extendedTextMessage ? message.extendedTextMessage.text : (message.conversation ? message.conversation : '')) : '';
@@ -31,7 +31,7 @@ const handler = async ({ messages }) => {
   const commandName = args.shift().toLowerCase();
 
   // Menjalankan command yang sesuai dengan nama command yang diambil dari pesan
-  executeCommand(commandName, { m, conn });
+  executeCommand(commandName, { m, conn, body });
 };
 
 

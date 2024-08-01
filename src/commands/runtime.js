@@ -9,6 +9,7 @@ const speed = require("performance-now");
 const { toTimer } = require("../libs/util");
 module.exports = {
   name: 'ping',
+  desc: 'Menampilkan status bot',
   async execute({ m, conn }) {
     const used = process.memoryUsage();
     const cpus = os.cpus()

@@ -4,22 +4,16 @@ const express = require('express');
 const cors = require('cors');
 
 const app = express();
-// const server = http.createServer(app);
 
 const startServer = async (connectToWhatsApp) => {
   // Server
   app.use(express.json());
   app.use(cors({
-    origin: 'https://syncro-bot-web.vercel.app',
+    origin: 'http://localhost:3000',
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
   }));
-  // app.all('/', function (req, res, next) {
-  //   res.header("Access-Control-Allow-Origin", "*");
-  //   res.header("Access-Control-Allow-Headers", "X-Requested-With");
-  //   next();
-  // });
 
   app.post('/bot/start', (req, res) => {
     if (global.conn) return res.status(500).json({ status: false });
@@ -60,14 +54,21 @@ const startServer = async (connectToWhatsApp) => {
     }
   });
 
-  try {
-    app.listen(3001, () => {
-      console.log("Server started on port 3000");
-    });
-  } catch (e) {
-    console.log("Error starting server:", e);
-  }
-  connectToWhatsApp(app)
+  const server = app.listen(3001, (err) => {
+    if (err) {
+      console.error("Error starting server:", err);
+    } else {
+      console.log("Server started on port 3001");
+    }
+  });
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.error(`Port ${port} is already in use.`);
+    } else {
+      console.error("Server error:", err);
+    }
+  });
+  connectToWhatsApp(app);
 };
 
 module.exports = startServer;

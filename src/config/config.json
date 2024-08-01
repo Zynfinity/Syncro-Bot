@@ -1,0 +1,14 @@
+{
+  "public": true,
+  "aiResponse": false,
+  "commands": {
+    "ping": {
+      "name": "ping",
+      "desc": "Menampilkan status bot"
+    },
+    "test": {
+      "name": "test",
+      "desc": "Cuma test"
+    }
+  }
+}
